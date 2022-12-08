@@ -7,7 +7,7 @@ extern controller Controller1;
 extern motor_group LeftGroup;
 extern motor_group RightGroup;
 extern motor_group Launcher;
-extern motor_group Pickup;
+extern motor Pickup;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

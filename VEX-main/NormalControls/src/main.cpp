@@ -14,7 +14,7 @@
 // LeftGroup            motor_group   2, 5            
 // RightGroup           motor_group   8, 13           
 // Launcher             motor_group   9, 10           
-// Pickup               motor_group   11, 12          
+// Pickup               motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -67,13 +67,10 @@ void turning() {
       (int)(Controller1.Axis1.value() * (motorTurningPercentage / 127));
   isTurning = true;
 
-  LeftGroup.setVelocity(abs(aPosition), percent);
-  RightGroup.setVelocity(abs(aPosition), percent);
-
   if (aPosition < -1) {
-    turnLeft(aPosition);
+    turnLeft(abs(aPosition));
   } else if (aPosition > 1) {
-    turnRight(aPosition);
+    turnRight(abs(aPosition));
   } else {
     isTurning = false;
   }
@@ -112,7 +109,6 @@ int main() {
   vexcodeInit();
 
   while (true) {
-
     // Forward Backward Movement
     Controller1.Axis3.changed(moving);
     // Turning
