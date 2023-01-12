@@ -13,8 +13,9 @@
 // Controller1          controller                    
 // LeftGroup            motor_group   2, 5            
 // RightGroup           motor_group   8, 13           
+// Pickup               motor         15              
 // Launcher             motor_group   9, 10           
-// Pickup               motor         11              
+// LauncherWheel        motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -44,7 +45,9 @@ void stopMovement() {
   RightGroup.stop();
 }
 
-void release() { stopMovement(); }
+void release() {
+  stopMovement();
+}
 
 void moving() {
   int aPosition =
@@ -54,7 +57,7 @@ void moving() {
   if (aPosition > 1) {
     LeftGroup.spin(forward);
     RightGroup.spin(forward);
-  } else if (aPosition < -1) {
+  } else if (aPosition < -1){
     LeftGroup.spin(reverse);
     RightGroup.spin(reverse);
   } else {
@@ -67,10 +70,13 @@ void turning() {
       (int)(Controller1.Axis1.value() * (motorTurningPercentage / 127));
   isTurning = true;
 
+  LeftGroup.setVelocity(abs(aPosition), percent);
+  RightGroup.setVelocity(abs(aPosition), percent);
+
   if (aPosition < -1) {
-    turnLeft(abs(aPosition));
+    turnLeft(aPosition);
   } else if (aPosition > 1) {
-    turnRight(abs(aPosition));
+    turnRight(aPosition);
   } else {
     isTurning = false;
   }
@@ -93,10 +99,14 @@ void launcherPressed() {
   // Brain.Screen.newLine();
 
   Launcher.spin(forward);
+  LauncherWheel.spin(forward);
 }
 
 // R2
-void launcherReleased() { Launcher.stop(); }
+void launcherReleased() { 
+  Launcher.stop();
+  LauncherWheel.stop();
+}
 
 // Left Arrow
 void smallTurnLeftPressed() { turnLeft(20); }
@@ -109,6 +119,7 @@ int main() {
   vexcodeInit();
 
   while (true) {
+
     // Forward Backward Movement
     Controller1.Axis3.changed(moving);
     // Turning
