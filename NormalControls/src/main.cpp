@@ -13,8 +13,9 @@
 // Controller1          controller                    
 // LeftGroup            motor_group   2, 5            
 // RightGroup           motor_group   8, 13           
-// Pickup               motor         9               
-// Launcher             motor_group   10, 11          
+// Pickup               motor         15              
+// Launcher             motor_group   9, 10           
+// LauncherWheel        motor         11              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -98,10 +99,14 @@ void launcherPressed() {
   // Brain.Screen.newLine();
 
   Launcher.spin(forward);
+  LauncherWheel.spin(forward);
 }
 
 // R2
-void launcherReleased() { Launcher.stop(); }
+void launcherReleased() { 
+  Launcher.stop();
+  LauncherWheel.stop();
+}
 
 // Left Arrow
 void smallTurnLeftPressed() { turnLeft(20); }

@@ -4,8 +4,7 @@ extern brain Brain;
 
 // VEXcode devices
 extern controller Controller1;
-extern motor_group LeftGroup;
-extern motor_group RightGroup;
+extern drivetrain Drivetrain;
 extern motor Pickup;
 extern motor_group Launcher;
 extern motor LauncherWheel;

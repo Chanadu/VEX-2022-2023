@@ -13,25 +13,20 @@
 // Controller1          controller                    
 // LeftGroup            motor_group   2, 5            
 // RightGroup           motor_group   8, 13           
-// Pickup               motor         15              
+// Pickup               motor         14              
 // Launcher             motor_group   9, 10           
+// LauncherWheel        motor         19              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
 using namespace vex;
 
 bool isTurning = false;
-double motorTurningPercentage = 75;
+double motorTurningPercentage = 50;
 double motorMovementPercentage = 100;
 
-void turnLeft(int vel) {
-  LeftGroup.setVelocity(vel, percent);
-  RightGroup.setVelocity(vel, percent);
-  LeftGroup.spin(reverse);
-  RightGroup.spin(forward);
-}
-
-void turnRight(int vel) {
+void Turn (int vel) {
+  vel *= -1;
   LeftGroup.setVelocity(vel, percent);
   RightGroup.setVelocity(vel, percent);
   LeftGroup.spin(forward);
@@ -69,7 +64,7 @@ void reversePressed() {
 void pickupPressed() {
   // Brain.Screen.print("Pickup");
   // Brain.Screen.newLine();
-
+  Pickup.setVelocity(100, percent);
   Pickup.spin(forward);
 }
 
@@ -80,34 +75,34 @@ void pickupReleased() { Pickup.stop(); }
 void launcherPressed() {
   // Brain.Screen.print("Launcher");
   // Brain.Screen.newLine();
-
+  LauncherWheel.spin(forward);
   Launcher.spin(forward);
 }
 
 // R2
-void launcherReleased() { Launcher.stop(); }
+void launcherReleased() {
+  Launcher.stop(); 
+  LauncherWheel.stop();
+}
 
 // Left Arrow
-void smallTurnLeftPressed() { turnLeft(20); }
+void smallTurnLeftPressed() { Turn(-20); }
 
 // Right Arrow
-void smallTurnRightPressed() { turnRight(20); }
+void smallTurnRightPressed() { Turn(20); }
 
 // Turning
 void axis4() {
   int aPosition =
       (int)(Controller1.Axis4.value() * (motorTurningPercentage / 127));
   isTurning = true;
-
-  LeftGroup.setVelocity(abs(aPosition), percent);
-  RightGroup.setVelocity(abs(aPosition), percent);
-
   if (aPosition < -1) {
-    turnLeft(aPosition);
+    Turn(aPosition);
   } else if (aPosition > 1) {
-    turnRight(aPosition);
+    Turn(aPosition);
   } else {
     isTurning = false;
+    stopMovement();
   }
 }
 
@@ -122,7 +117,8 @@ int main() {
   vexcodeInit();
   
   while (true) {
-
+    LauncherWheel.setVelocity(100, percent);
+    Launcher.setVelocity(100, percent);
     // Forward Backward Movement
     if (!isTurning) {
       Controller1.ButtonR1.pressed(forwardPressed);
@@ -141,12 +137,12 @@ int main() {
     Controller1.ButtonRight.released(release);
 
     // Launcher
-    Controller1.ButtonR2.pressed(launcherPressed);
-    Controller1.ButtonR2.released(launcherReleased);
+    Controller1.ButtonL2.pressed(launcherPressed);
+    Controller1.ButtonL2.released(launcherReleased);
 
     // Pickup and Release
-    Controller1.ButtonL2.pressed(pickupPressed);
-    Controller1.ButtonL2.released(pickupReleased);
+    Controller1.ButtonR2.pressed(pickupPressed);
+    Controller1.ButtonR2.released(pickupReleased);
 
     // Sleep
     task::sleep(5);
