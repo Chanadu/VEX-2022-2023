@@ -1,7 +1,7 @@
 # Vex Code 1965M  
 
 ## Overview  
-This is the github repository for the vex team 1965M.  
+This is the github repository for the vex team currently is 1965MSpinUp.  
 Written in Vexcode Pro V5 in C++  
 The extra files are not needed, the main folder is 1965MCode.
 I would suggest not to use this code as it is poorly maintained and may contain errors. This repo is only for version control for my vex team.  
