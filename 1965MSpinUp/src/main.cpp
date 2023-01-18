@@ -10,12 +10,13 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// RightMotors          motor_group   2, 5            
-// LeftMotors           motor_group   8, 13           
 // Intake               motor         14              
 // Shooter              motor_group   9, 10           
-// ShooterWheel         motor         11              
 // Controller1          controller                    
+// LeftMotors           motor_group   2, 5            
+// RightMotors          motor_group   8, 13           
+// ShooterWheel         motor         11              
+// StringLaucher        motor         12              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -33,6 +34,7 @@ enum move
   intake,
   shoot,
   shootWheel,
+  stringLauncher
 };
 
 //Speeds
@@ -41,6 +43,7 @@ double turningSpeed = 50.0;
 double intakeSpeed = 100.0;
 double shooterSpeed = 100.0;
 double shooterWheelSpeed = 100.0;
+double stringLauncherSpeed = 100.0;
 
 std::map<move, double> speeds = 
 {
@@ -55,7 +58,7 @@ std::map<move, double> speeds =
  {move::intake, intakeSpeed},
  {move::shoot, shooterSpeed},
  {move::shootWheel, shooterWheelSpeed},
-
+ {move::stringLauncher, stringLauncherSpeed}
 };
 
 //States
@@ -78,20 +81,20 @@ void moveMotors(move movingDirection, double speedChange = 100.0) {
   
   switch (movingDirection) {
     case move::stopMovement:
-      LeftMotors.stop();
-      RightMotors.stop();
+      LeftMotors.stop(vex::coast);
+      RightMotors.stop(vex::coast);
       break;
 
     case move::stopIntake:
-      Intake.stop();
+      Intake.stop(vex::coast);
       break;
 
     case move::stopShooter:
-      Shooter.stop();
+      Shooter.stop(vex::coast);
       break;
 
     case move::stopShooterWheel:
-      ShooterWheel.stop();
+      ShooterWheel.stop(vex::coast);
       break;
 
     case move::forward:
@@ -125,7 +128,9 @@ void moveMotors(move movingDirection, double speedChange = 100.0) {
     case move::shootWheel:
       ShooterWheel.spin(vex::forward);
       break;
-
+    case move::stringLauncher:
+      StringLaucher.spin(vex::forward);
+      break;
   }
 }
 
@@ -202,6 +207,16 @@ void reverseButtonReleased() {
 }
 
 
+void stringLauncherButtonPressed() {
+  moveMotors(move::stringLauncher);
+}
+
+
+void stringLauncherStopButtonPressed() {
+  StringLaucher.stop(vex::coast);
+}
+
+
 // Runs once when connected to the competition
 void pre_auton(void) {
   vexcodeInit();
@@ -211,6 +226,7 @@ void pre_auton(void) {
   Intake.setVelocity(speeds[move::intake], percent);
   Shooter.setVelocity(speeds[move::shoot], percent);
   ShooterWheel.setVelocity(speeds[move::shootWheel], percent);
+  StringLaucher.setVelocity(speeds[move::stringLauncher], percent);
   return;
 }
 
@@ -245,6 +261,9 @@ void usercontrol(void) {
     Controller1.ButtonR1.released(intakeButtonReleased);
     Controller1.ButtonL1.pressed(shooterButtonPressed);
     Controller1.ButtonL1.released(shooterButtonReleased);
+    Controller1.ButtonL1.pressed(shooterButtonPressed);
+    Controller1.ButtonB.pressed(stringLauncherButtonPressed);
+    Controller1.ButtonX.pressed(stringLauncherStopButtonPressed);
 
     double axis3 = Controller1.Axis3.value() * (speeds[move::forward] / 127.0);
     double axis1 = Controller1.Axis1.value() * (speeds[move::forward] / 127.0);

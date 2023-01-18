@@ -5,10 +5,11 @@ extern brain Brain;
 // VEXcode devices
 extern motor Intake;
 extern motor_group Shooter;
-extern motor ShooterWheel;
 extern controller Controller1;
 extern motor_group LeftMotors;
 extern motor_group RightMotors;
+extern motor ShooterWheel;
+extern motor StringLaucher;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
