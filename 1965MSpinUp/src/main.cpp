@@ -71,25 +71,6 @@ states currentState = states::stopped;
 competition Competition;
 
 
-// Runs once when connected to the competition
-void pre_auton(void) {
-  vexcodeInit();
-
-  RightMotors.setVelocity(speeds[move::forward], percent);
-  LeftMotors.setVelocity(speeds[move::forward], percent);
-  Intake.setVelocity(speeds[move::intake], percent);
-  Shooter.setVelocity(speeds[move::shoot], percent);
-  ShooterWheel.setVelocity(speeds[move::shootWheel], percent);
-  return;
-}
-
-
-// Runs when Competition starts Autonomous Code
-void autonomous(void) {
-  // Roll roller to right color & Push disks into low goal
-}
-
-
 void moveMotors(move movingDirection, double speedChange = 100.0) {
   double motorVelocity = speeds[movingDirection] * (speedChange / 100.0);
   LeftMotors.setVelocity(motorVelocity, percent);
@@ -221,32 +202,61 @@ void reverseButtonReleased() {
 }
 
 
+// Runs once when connected to the competition
+void pre_auton(void) {
+  vexcodeInit();
+
+  RightMotors.setVelocity(speeds[move::forward], percent);
+  LeftMotors.setVelocity(speeds[move::forward], percent);
+  Intake.setVelocity(speeds[move::intake], percent);
+  Shooter.setVelocity(speeds[move::shoot], percent);
+  ShooterWheel.setVelocity(speeds[move::shootWheel], percent);
+  return;
+}
+
+
+// Runs when Competition starts Autonomous Code
+void autonomous(void) {
+  // Roll roller to right color & Push disks into low goal
+  Intake.spinTo(90, vex::degrees, true);
+  moveMotors(move::forward);
+  wait(2000, msec);
+  moveMotors(move::stopMovement);
+}
+
+
+
 //Evan's Controls
 void usercontrol(void) {
   while (true) {
-    Controller1.Axis1.changed(turnAxis);
+    //Controller1.Axis1.changed(turnAxis);
 
-    if (currentState != states::turning) {
-      Controller1.Axis3.changed(movementAxis);
-      /*
-      Controller1.ButtonR1.pressed(intakeButtonPressed);
-      Controller1.ButtonR1.released(intakeButtonReleased);
-      Controller1.ButtonL1.pressed(shooterButtonPressed);
-      Controller1.ButtonL1.released(shooterButtonReleased);
-      */
-    }
+    // if (currentState != states::turning) {
+    //   Controller1.Axis3.changed(movementAxis);
+      
+    //   Controller1.ButtonR1.pressed(intakeButtonPressed);
+    //   Controller1.ButtonR1.released(intakeButtonReleased);
+    //   Controller1.ButtonL1.pressed(shooterButtonPressed);
+    //   Controller1.ButtonL1.released(shooterButtonReleased);
+      
+    // }
 
     Controller1.ButtonR1.pressed(intakeButtonPressed);
     Controller1.ButtonR1.released(intakeButtonReleased);
     Controller1.ButtonL1.pressed(shooterButtonPressed);
     Controller1.ButtonL1.released(shooterButtonReleased);
 
-    /*
-    Controller1.ButtonR2.pressed(intakeButtonPressed);
-    Controller1.ButtonR2.released(intakeButtonReleased);
-    Controller1.ButtonL2.pressed(shooterButtonPressed);
-    Controller1.ButtonL2.released(shooterButtonReleased);
-    */
+    double axis3 = Controller1.Axis3.value() * (speeds[move::forward] / 127.0);
+    double axis1 = Controller1.Axis1.value() * (speeds[move::forward] / 127.0);
+    
+    LeftMotors.spin(vex::forward, axis3 + axis1, percent);
+    RightMotors.spin(vex::forward, axis3 - axis1, percent);
+
+    // Controller1.ButtonR2.pressed(intakeButtonPressed);
+    // Controller1.ButtonR2.released(intakeButtonReleased);
+    // Controller1.ButtonL2.pressed(shooterButtonPressed);
+    // Controller1.ButtonL2.released(shooterButtonReleased);
+    
 
     wait(10, msec);
   }
