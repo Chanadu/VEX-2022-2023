@@ -16,7 +16,7 @@
 // LeftMotors           motor_group   2, 5            
 // RightMotors          motor_group   8, 13           
 // ShooterWheel         motor         11              
-// StringLaucher        motor         12              
+// StringLauncher       motor         16              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -43,7 +43,7 @@ double turningSpeed = 50.0;
 double intakeSpeed = 100.0;
 double shooterSpeed = 100.0;
 double shooterWheelSpeed = 100.0;
-double stringLauncherSpeed = 100.0;
+double stringLauncherSpeed = 60.0;
 
 std::map<move, double> speeds = 
 {
@@ -129,7 +129,7 @@ void moveMotors(move movingDirection, double speedChange = 100.0) {
       ShooterWheel.spin(vex::forward);
       break;
     case move::stringLauncher:
-      StringLaucher.spin(vex::forward);
+      StringLauncher.spin(vex::forward);
       break;
   }
 }
@@ -212,8 +212,13 @@ void stringLauncherButtonPressed() {
 }
 
 
+void stringLauncherPressed() {
+  StringLauncher.spin(vex::reverse);
+}
+
+
 void stringLauncherStopButtonPressed() {
-  StringLaucher.stop(vex::coast);
+  StringLauncher.stop(vex::coast);
 }
 
 
@@ -226,7 +231,7 @@ void pre_auton(void) {
   Intake.setVelocity(speeds[move::intake], percent);
   Shooter.setVelocity(speeds[move::shoot], percent);
   ShooterWheel.setVelocity(speeds[move::shootWheel], percent);
-  StringLaucher.setVelocity(speeds[move::stringLauncher], percent);
+  StringLauncher.setVelocity(speeds[move::stringLauncher], percent);
   return;
 }
 
@@ -264,6 +269,7 @@ void usercontrol(void) {
     Controller1.ButtonL1.pressed(shooterButtonPressed);
     Controller1.ButtonB.pressed(stringLauncherButtonPressed);
     Controller1.ButtonX.pressed(stringLauncherStopButtonPressed);
+    Controller1.ButtonY.pressed(stringLauncherPressed);
 
     double axis3 = Controller1.Axis3.value() * (speeds[move::forward] / 127.0);
     double axis1 = Controller1.Axis1.value() * (speeds[move::forward] / 127.0);
