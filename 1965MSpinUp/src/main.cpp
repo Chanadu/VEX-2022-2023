@@ -16,7 +16,7 @@
 // LeftMotors           motor_group   2, 5            
 // RightMotors          motor_group   8, 13           
 // ShooterWheel         motor         11              
-// StringLauncher       motor         16              
+// StringLauncher       motor         6               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -222,7 +222,7 @@ void stringLauncherStopButtonPressed() {
 }
 
 
-// Runs once when connected to the competition
+// Runs once when connected to the
 void pre_auton(void) {
   vexcodeInit();
 
@@ -269,6 +269,7 @@ void usercontrol(void) {
     Controller1.ButtonL1.pressed(shooterButtonPressed);
     Controller1.ButtonB.pressed(stringLauncherButtonPressed);
     Controller1.ButtonX.pressed(stringLauncherStopButtonPressed);
+    // Reverse
     Controller1.ButtonY.pressed(stringLauncherPressed);
 
     double axis3 = Controller1.Axis3.value() * (speeds[move::forward] / 127.0);

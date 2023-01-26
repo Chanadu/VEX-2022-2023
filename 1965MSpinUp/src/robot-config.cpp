@@ -20,7 +20,7 @@ motor RightMotorsMotorA = motor(PORT8, ratio18_1, false);
 motor RightMotorsMotorB = motor(PORT13, ratio18_1, false);
 motor_group RightMotors = motor_group(RightMotorsMotorA, RightMotorsMotorB);
 motor ShooterWheel = motor(PORT11, ratio18_1, false);
-motor StringLauncher = motor(PORT16, ratio18_1, true);
+motor StringLauncher = motor(PORT6, ratio18_1, true);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
