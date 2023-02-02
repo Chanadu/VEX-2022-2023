@@ -10,12 +10,11 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Intake               motor         14              
+// Intake               motor         11              
 // Shooter              motor_group   9, 10           
 // Controller1          controller                    
 // LeftMotors           motor_group   2, 5            
 // RightMotors          motor_group   8, 13           
-// ShooterWheel         motor         11              
 // StringLauncher       motor         6               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
@@ -26,14 +25,12 @@ enum move
   stopMovement,
   stopIntake,
   stopShooter,
-  stopShooterWheel,
   forward,
   reverse,
   left,
   right,
   intake,
   shoot,
-  shootWheel,
   stringLauncher
 };
 
@@ -42,7 +39,6 @@ double movingSpeed = 80.0;
 double turningSpeed = 50.0;
 double intakeSpeed = 100.0;
 double shooterSpeed = 100.0;
-double shooterWheelSpeed = 100.0;
 double stringLauncherSpeed = 60.0;
 
 std::map<move, double> speeds = 
@@ -50,14 +46,12 @@ std::map<move, double> speeds =
  {move::stopMovement, 0.0},
  {move::stopIntake, 0.0},
  {move::stopShooter, 0.0},
- {move::stopShooterWheel, 0.0},
  {move::forward, movingSpeed}, 
  {move::reverse, movingSpeed},
  {move::left, movingSpeed},
  {move::right, movingSpeed},
  {move::intake, intakeSpeed},
  {move::shoot, shooterSpeed},
- {move::shootWheel, shooterWheelSpeed},
  {move::stringLauncher, stringLauncherSpeed}
 };
 
@@ -92,11 +86,6 @@ void moveMotors(move movingDirection, double speedChange = 100.0) {
     case move::stopShooter:
       Shooter.stop(vex::coast);
       break;
-
-    case move::stopShooterWheel:
-      ShooterWheel.stop(vex::coast);
-      break;
-
     case move::forward:
       LeftMotors.spin(vex::forward);
       RightMotors.spin(vex::forward);
@@ -123,10 +112,6 @@ void moveMotors(move movingDirection, double speedChange = 100.0) {
 
     case move::shoot:
       Shooter.spin(vex::forward);
-      break;
-
-    case move::shootWheel:
-      ShooterWheel.spin(vex::forward);
       break;
     case move::stringLauncher:
       StringLauncher.spin(vex::forward);
@@ -230,7 +215,6 @@ void pre_auton(void) {
   LeftMotors.setVelocity(speeds[move::forward], percent);
   Intake.setVelocity(speeds[move::intake], percent);
   Shooter.setVelocity(speeds[move::shoot], percent);
-  ShooterWheel.setVelocity(speeds[move::shootWheel], percent);
   StringLauncher.setVelocity(speeds[move::stringLauncher], percent);
   return;
 }
@@ -240,9 +224,16 @@ void pre_auton(void) {
 void autonomous(void) {
   // Roll roller to right color & Push disks into low goal
   Intake.spinTo(90, vex::degrees, true);
-  moveMotors(move::forward);
-  wait(2000, msec);
-  moveMotors(move::stopMovement);
+  LeftMotors.spinFor(vex::forward, 360, vex::deg);
+  RightMotors.spinFor(vex::forward, 360, vex::deg);
+
+  waitUntil(!LeftMotors.isSpinning());
+  waitUntil(!RightMotors.isSpinning());
+  LeftMotors.spinFor(vex::reverse, 180, vex::deg);
+  RightMotors.spinFor(vex::forward, 180, vex::deg);
+
+  
+
 }
 
 

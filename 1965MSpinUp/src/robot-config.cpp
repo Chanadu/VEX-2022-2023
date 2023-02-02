@@ -8,7 +8,7 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor Intake = motor(PORT14, ratio18_1, false);
+motor Intake = motor(PORT11, ratio36_1, true);
 motor ShooterMotorA = motor(PORT9, ratio18_1, true);
 motor ShooterMotorB = motor(PORT10, ratio18_1, false);
 motor_group Shooter = motor_group(ShooterMotorA, ShooterMotorB);
@@ -19,7 +19,6 @@ motor_group LeftMotors = motor_group(LeftMotorsMotorA, LeftMotorsMotorB);
 motor RightMotorsMotorA = motor(PORT8, ratio18_1, false);
 motor RightMotorsMotorB = motor(PORT13, ratio18_1, false);
 motor_group RightMotors = motor_group(RightMotorsMotorA, RightMotorsMotorB);
-motor ShooterWheel = motor(PORT11, ratio18_1, false);
 motor StringLauncher = motor(PORT6, ratio18_1, true);
 
 // VEXcode generated functions

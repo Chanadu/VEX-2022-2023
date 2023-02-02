@@ -8,7 +8,6 @@ extern motor_group Shooter;
 extern controller Controller1;
 extern motor_group LeftMotors;
 extern motor_group RightMotors;
-extern motor ShooterWheel;
 extern motor StringLauncher;
 
 /**
