@@ -39,7 +39,7 @@ double movingSpeed = 80.0;
 double turningSpeed = 50.0;
 double intakeSpeed = 100.0;
 double shooterSpeed = 100.0;
-double stringLauncherSpeed = 60.0;
+double stringLauncherSpeed = 100.0;
 
 std::map<move, double> speeds = 
 {
@@ -224,18 +224,20 @@ void pre_auton(void) {
 void autonomous(void) {
   // Roll roller to right color & Push disks into low goal
   Intake.spinTo(90, vex::degrees, true);
-  LeftMotors.spinFor(vex::forward, 360, vex::deg);
-  RightMotors.spinFor(vex::forward, 360, vex::deg);
+  //LeftMotors.spinFor(vex::forward, 360, vex::deg);
+  //RightMotors.spinFor(vex::forward, 360, vex::deg);
 
   waitUntil(!LeftMotors.isSpinning());
   waitUntil(!RightMotors.isSpinning());
-  LeftMotors.spinFor(vex::reverse, 180, vex::deg);
-  RightMotors.spinFor(vex::forward, 180, vex::deg);
-
-  
-
+ // LeftMotors.spinFor(vex::reverse, 180, vex::deg);
+//RightMotors.spinFor(vex::forward, 180, vex::deg);
 }
 
+
+void downButtonPressed() {
+  //Brain.Screen.print("A");
+  autonomous();
+}
 
 
 //Evan's Controls
@@ -262,6 +264,9 @@ void usercontrol(void) {
     Controller1.ButtonX.pressed(stringLauncherStopButtonPressed);
     // Reverse
     Controller1.ButtonY.pressed(stringLauncherPressed);
+
+    //Temp Auton button
+    Controller1.ButtonDown.pressed(downButtonPressed);
 
     double axis3 = Controller1.Axis3.value() * (speeds[move::forward] / 127.0);
     double axis1 = Controller1.Axis1.value() * (speeds[move::forward] / 127.0);
