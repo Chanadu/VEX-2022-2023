@@ -1,4 +1,4 @@
-# Vex Code 1965M  
+# Vex Code  
 
 ## Overview  
 This is the github repository for my vex team.  
