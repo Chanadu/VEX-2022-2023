@@ -1,9 +1,8 @@
 # Vex Code 1965M  
 
 ## Overview  
-This is the github repository for the vex team currently is 1965MSpinUp.  
+This is the github repository for my vex team.  
 Written in Vexcode Pro V5 in C++  
-The extra files are not needed, the main folder is 1965MCode.
 I would suggest not to use this code as it is poorly maintained and may contain errors. This repo is only for version control for my vex team.  
 
 ## Brain Ports  
@@ -15,4 +14,4 @@ Shooter Wheel: **11**
 Antenna: **20**  
 
 ## Laptop Numbers  
-1, 11, 18, 4  
+18
