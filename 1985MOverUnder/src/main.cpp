@@ -99,6 +99,19 @@ void wingsActiveButtonReleased() {
 
 void usercontrol(void) {
   while (true) {
+    if (fastIntake) IntakeMotors.setVelocity(100, percent);
+    else IntakeMotors.setVelocity(50, percent);
+
+    if (fastTurning) Drivetrain.setTurnVelocity(100, percent);
+    else Drivetrain.setTurnVelocity(50, percent);
+
+    if (fastMovement) Drivetrain.setDriveVelocity(100, percent);
+    else Drivetrain.setDriveVelocity(50, percent);
+
+    if (wingsActive);
+    else ;
+
+
     Controller1.ButtonL1.pressed(intakeReverseButtonPressed);
     Controller1.ButtonL2.pressed(intakeForwardButtonPressed);
     Controller1.ButtonL1.released(intakeButtonReleased);
