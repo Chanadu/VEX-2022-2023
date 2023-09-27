@@ -86,7 +86,11 @@ void intakeReverseButtonPressed() { IntakeMotors.spin(reverse); }
 
 void intakeButtonReleased() { IntakeMotors.stop(); }
 
-void launcherForwardButtonPressed() { LauncherMotor.spin(forward); }
+void launcherForwardButtonPressed() {
+  LauncherMotor.spin(forward);
+  // LauncherMotor.spinTo(90, degrees);
+  // LauncherMotor.spinTo(0, degrees);
+}
 
 void launcherButtonReleased() { LauncherMotor.stop(); }
 
@@ -110,6 +114,8 @@ void fastMovementButtonPressed() {
   fastMovementButtonCurrentlyPressed = true;
   fastMovement ^= true;
   runBooleanChecks(3);
+  Brain.Screen.print(fastMovement);
+  Brain.Screen.newLine();
 }
 
 void fastMovementButtonReleased() {
@@ -123,7 +129,6 @@ void wingsActiveButtonPressed() {
 }
 
 void wingsActiveButtonReleased() { wingsActiveButtonCurrentlyPressed = false; }
-
 
 void usercontrol(void) {
   Brain.Screen.print("Usercontrol start");
@@ -158,7 +163,7 @@ int main() {
   pre_auton();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
-  while (true) {
+  while (true) {c   
     wait(100, msec);
   }
 }
