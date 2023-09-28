@@ -10,11 +10,10 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// LauncherMotor        motor         11
-// Motor14              motor         14
-// IntakeMotors         motor_group   9, 10
-// Drivetrain           drivetrain    2, 5, 8, 13
+// Controller1          controller                    
+// LauncherMotor        motor         14              
+// IntakeMotors         motor_group   9, 10           
+// Drivetrain           drivetrain    2, 5, 8, 13     
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -40,6 +39,8 @@ void runBooleanChecks(int boolean) {
   boolean 4 -> Wings
   boolean -1 -> All
   */
+  Brain.Screen.clearScreen();
+  Brain.Screen.print(" Run I hope ");
   if (boolean == 1 || boolean == -1) {
     if (fastIntake)
       IntakeMotors.setVelocity(100, percent);
@@ -48,15 +49,15 @@ void runBooleanChecks(int boolean) {
   }
   if (boolean == 2 || boolean == -1) {
     if (fastTurning)
-      Drivetrain.setTurnVelocity(100, percent);
+      Drivetrain.setTurnVelocity(75, percent);
     else
-      Drivetrain.setTurnVelocity(50, percent);
+      Drivetrain.setTurnVelocity(45, percent);
   }
   if (boolean == 3 || boolean == -1) {
     if (fastMovement)
-      Drivetrain.setDriveVelocity(100, percent);
-    else
       Drivetrain.setDriveVelocity(50, percent);
+    else
+      Drivetrain.setDriveVelocity(25, percent);
   }
   if (boolean == 4 || boolean == -1) {
     if (wingsActive)
@@ -71,8 +72,11 @@ void pre_auton(void) {
   Brain.Screen.print("Pre Auton Done");
   Brain.Screen.newLine();
   runBooleanChecks(-1);
+  LauncherMotor.setVelocity(100, percent);
+  IntakeMotors.setVelocity(100, percent);
+  Drivetrain.setStopping(brake);
   return;
-}
+}   
 
 void autonomous(void) {
   // Wow this is crazy
@@ -88,8 +92,10 @@ void intakeButtonReleased() { IntakeMotors.stop(); }
 
 void launcherForwardButtonPressed() {
   LauncherMotor.spin(forward);
-  // LauncherMotor.spinTo(90, degrees);
-  // LauncherMotor.spinTo(0, degrees);
+}
+
+void launcherReverseButtonPressed() {
+  LauncherMotor.spin(reverse);
 }
 
 void launcherButtonReleased() { LauncherMotor.stop(); }
@@ -142,6 +148,8 @@ void usercontrol(void) {
 
     Controller1.ButtonR2.pressed(launcherForwardButtonPressed);
     Controller1.ButtonR2.released(launcherButtonReleased);
+    Controller1.ButtonR1.pressed(launcherReverseButtonPressed);
+    Controller1.ButtonR1.released(launcherButtonReleased);
 
     Controller1.ButtonB.pressed(wingsActiveButtonPressed);
     Controller1.ButtonB.released(wingsActiveButtonReleased);
@@ -163,7 +171,7 @@ int main() {
   pre_auton();
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
-  while (true) {c   
+  while (true) {
     wait(100, msec);
   }
 }
