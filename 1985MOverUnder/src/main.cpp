@@ -10,168 +10,87 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// LauncherMotor        motor         14              
-// IntakeMotors         motor_group   9, 10           
-// Drivetrain           drivetrain    2, 5, 8, 13     
+// Controller1          controller
+// LauncherMotor        motor         14
+// Drivetrain           drivetrain    2, 5, 15, 13
+// Solenoid1            digital_out   E
+// Solenoid2            digital_out   H
+// UpMotor              motor         18
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
-#include "vex.h"
+#include "main.h"
+#include "auton.h"
+#include "usercontrol.h"
 
-using namespace vex;
+bool pistonStatus = false;
 
-competition Competition;
-
-bool fastIntake = true;
-bool fastIntakeButtonCurrentlyPressed = false;
-bool fastTurning = false;
-bool fastTurningButtonCurrentlyPressed = false;
-bool fastMovement = false;
-bool fastMovementButtonCurrentlyPressed = false;
-bool wingsActive = false;
-bool wingsActiveButtonCurrentlyPressed = false;
-
-void runBooleanChecks(int boolean) {
-  /*
-  boolean 1 -> fast Intake
-  boolean 2 -> fast Turning
-  boolean 3 -> Fast Movement
-  boolean 4 -> Wings
-  boolean -1 -> All
-  */
-  Brain.Screen.clearScreen();
-  Brain.Screen.print(" Run I hope ");
-  if (boolean == 1 || boolean == -1) {
-    if (fastIntake)
-      IntakeMotors.setVelocity(100, percent);
-    else
-      IntakeMotors.setVelocity(50, percent);
-  }
-  if (boolean == 2 || boolean == -1) {
-    if (fastTurning)
-      Drivetrain.setTurnVelocity(75, percent);
-    else
-      Drivetrain.setTurnVelocity(45, percent);
-  }
-  if (boolean == 3 || boolean == -1) {
-    if (fastMovement)
-      Drivetrain.setDriveVelocity(50, percent);
-    else
-      Drivetrain.setDriveVelocity(25, percent);
-  }
-  if (boolean == 4 || boolean == -1) {
-    if (wingsActive)
-      ;
-    else
-      ;
-  }
+void setPistons(bool status, int waitTime)
+{
+	pistonStatus = status;
+	Solenoid1.set(status);
+	Solenoid2.set(status);
+	if (waitTime != 0)
+	{
+		wait(waitTime, timeUnits::msec);
+	}
 }
 
-void pre_auton(void) {
-  vexcodeInit();
-  Brain.Screen.print("Pre Auton Done");
-  Brain.Screen.newLine();
-  runBooleanChecks(-1);
-  LauncherMotor.setVelocity(100, percent);
-  IntakeMotors.setVelocity(100, percent);
-  Drivetrain.setStopping(brake);
-  return;
-}   
-
-void autonomous(void) {
-  // Wow this is crazy
-  Brain.Screen.print("Auton Done");
-  Brain.Screen.newLine();
+void setPistons(bool status)
+{
+	setPistons(status, 0);
 }
 
-void intakeForwardButtonPressed() { IntakeMotors.spin(forward); }
-
-void intakeReverseButtonPressed() { IntakeMotors.spin(reverse); }
-
-void intakeButtonReleased() { IntakeMotors.stop(); }
-
-void launcherForwardButtonPressed() {
-  LauncherMotor.spin(forward);
+bool getPistons(void)
+{
+	return pistonStatus;
 }
 
-void launcherReverseButtonPressed() {
-  LauncherMotor.spin(reverse);
+void flipPistons(int waitTime)
+{
+	pistonStatus ^= true;
+	Solenoid1.set(pistonStatus);
+	Solenoid2.set(pistonStatus);
+
+	if (waitTime != 0)
+	{
+		wait(waitTime, timeUnits::msec);
+	}
 }
 
-void launcherButtonReleased() { LauncherMotor.stop(); }
+void flipPistons(void) { flipPistons(0); }
 
-void fastIntakeButtonPressed() {
-  fastIntakeButtonCurrentlyPressed = true;
-  fastIntake ^= true;
-  runBooleanChecks(1);
+void pre_auton(void)
+{
+	LauncherMotor.setVelocity(100, percent);
+	LauncherMotor.setStopping(brakeType::coast);
+
+	Drivetrain.setStopping(brake);
+
+	UpMotor.setVelocity(100, percent);
+	UpMotor.setStopping(brake);
+
+	setPistons(false);
+
+	Brain.Screen.print("Pre Auton Ran");
+	Brain.Screen.newLine();
 }
 
-void fastIntakeButtonReleased() { fastIntakeButtonCurrentlyPressed = false; }
+int main()
+{
+	vexcodeInit();
 
-void fastTurningButtonPressed() {
-  fastTurningButtonCurrentlyPressed = true;
-  fastTurning ^= true;
-  runBooleanChecks(2);
-}
+	pre_auton();
 
-void fastTurningButtonReleased() { fastTurningButtonCurrentlyPressed = false; }
+	Competition.autonomous(autonomous);
 
-void fastMovementButtonPressed() {
-  fastMovementButtonCurrentlyPressed = true;
-  fastMovement ^= true;
-  runBooleanChecks(3);
-  Brain.Screen.print(fastMovement);
-  Brain.Screen.newLine();
-}
+	// Both are for redundancy later
+	Drivetrain.setTurnVelocity(25, percent);
+	Drivetrain.setDriveVelocity(100, percent);
 
-void fastMovementButtonReleased() {
-  fastMovementButtonCurrentlyPressed = false;
-}
+	Competition.drivercontrol(usercontrol);
 
-void wingsActiveButtonPressed() {
-  wingsActiveButtonCurrentlyPressed = true;
-  wingsActive ^= true;
-  runBooleanChecks(4);
-}
-
-void wingsActiveButtonReleased() { wingsActiveButtonCurrentlyPressed = false; }
-
-void usercontrol(void) {
-  Brain.Screen.print("Usercontrol start");
-  Brain.Screen.newLine();
-  while (true) {
-
-    Controller1.ButtonL1.pressed(intakeReverseButtonPressed);
-    Controller1.ButtonL2.pressed(intakeForwardButtonPressed);
-    Controller1.ButtonL1.released(intakeButtonReleased);
-    Controller1.ButtonL2.released(intakeButtonReleased);
-
-    Controller1.ButtonR2.pressed(launcherForwardButtonPressed);
-    Controller1.ButtonR2.released(launcherButtonReleased);
-    Controller1.ButtonR1.pressed(launcherReverseButtonPressed);
-    Controller1.ButtonR1.released(launcherButtonReleased);
-
-    Controller1.ButtonB.pressed(wingsActiveButtonPressed);
-    Controller1.ButtonB.released(wingsActiveButtonReleased);
-
-    Controller1.ButtonY.pressed(fastMovementButtonPressed);
-    Controller1.ButtonY.released(fastMovementButtonReleased);
-
-    Controller1.ButtonX.pressed(fastTurningButtonPressed);
-    Controller1.ButtonX.released(fastTurningButtonReleased);
-
-    Controller1.ButtonA.pressed(fastIntakeButtonPressed);
-    Controller1.ButtonA.released(fastIntakeButtonReleased);
-
-    wait(10, msec);
-  }
-}
-
-int main() {
-  pre_auton();
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
-  while (true) {
-    wait(100, msec);
-  }
+	while (true)
+	{
+		wait(100, msec);
+	}
 }
