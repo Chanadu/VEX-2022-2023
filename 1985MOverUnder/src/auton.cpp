@@ -123,7 +123,7 @@ void pushAuton(void)
 {
 	// Inital Colored Triball into Goal
 	setPistons(false);
-	turn(left, 10);
+	turn(right, 10);
 	drive(forward, 32);
 
 	// Quick Piston Flash to Secure the Ball In
