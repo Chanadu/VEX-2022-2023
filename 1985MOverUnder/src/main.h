@@ -2,8 +2,6 @@
 
 using namespace vex;
 
-competition Competition;
-
 void setPistons(bool status);
 void setPistons(bool status, int waitTime);
 

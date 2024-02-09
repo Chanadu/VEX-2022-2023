@@ -6,7 +6,7 @@ using code = vision::code;
 
 // A global instance of brain used for printing to the V5 Brain screen
 brain  Brain;
-
+ 
 // VEXcode device constructors
 controller Controller1 = controller(primary);
 motor LauncherMotor = motor(PORT14, ratio6_1, false);

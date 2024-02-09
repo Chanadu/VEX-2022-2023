@@ -1,5 +1,7 @@
-#include "main.h"
+#include "vex.h"
 
-bool solenoidJustPressed;
+using namespace vex;
+
 
 void usercontrol(void);
+ 

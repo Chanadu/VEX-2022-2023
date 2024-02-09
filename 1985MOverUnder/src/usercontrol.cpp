@@ -1,4 +1,5 @@
 #include "usercontrol.h"
+#include "main.h"
 
 bool solenoidJustPressed = false;
 
@@ -33,13 +34,13 @@ void usercontrol(void)
 
 	while (true)
 	{
-		Controller1.ButtonDown.pressed(solenoidButtonPressed);
-		Controller1.ButtonDown.released(solenoidButtonReleased);
+		Controller1.ButtonB.pressed(solenoidButtonPressed);
+		Controller1.ButtonB.released(solenoidButtonReleased);
 
-		Controller1.ButtonUp.pressed(upMotorButtonForwardPressed);
-		Controller1.ButtonUp.released(upMotorButtonReleased);
-		Controller1.ButtonDown.pressed(upMotorButtonReversePressed);
+		Controller1.ButtonDown.pressed(upMotorButtonForwardPressed);
 		Controller1.ButtonDown.released(upMotorButtonReleased);
+		Controller1.ButtonUp.pressed(upMotorButtonReversePressed);
+		Controller1.ButtonUp.released(upMotorButtonReleased);
 
 		Controller1.ButtonR2.pressed(launcherForwardButtonPressed);
 		Controller1.ButtonR2.released(launcherButtonReleased);

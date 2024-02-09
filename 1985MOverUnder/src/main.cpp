@@ -23,12 +23,15 @@
 #include "usercontrol.h"
 
 bool pistonStatus = false;
+competition Competition;
 
 void setPistons(bool status, int waitTime)
 {
 	pistonStatus = status;
 	Solenoid1.set(status);
 	Solenoid2.set(status);
+	Brain.Screen.print(status);
+	Brain.Screen.newLine();
 	if (waitTime != 0)
 	{
 		wait(waitTime, timeUnits::msec);
@@ -38,6 +41,8 @@ void setPistons(bool status, int waitTime)
 void setPistons(bool status)
 {
 	setPistons(status, 0);
+	Brain.Screen.print(&"Status: "[status]);
+	Brain.Screen.newLine();
 }
 
 bool getPistons(void)

@@ -1,24 +1,5 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       auton.cpp                                                 */
-/*    Author:       C:\Users\cpedda26                                         */
-/*    Created:      Thu Sep 07 2023                                           */
-/*    Description:  V5 project                                                */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
-
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// LauncherMotor        motor         14
-// Drivetrain           drivetrain    2, 5, 15, 13
-// Solenoid1            digital_out   E
-// Solenoid2            digital_out   H
-// UpMotor              motor         18
-// ---- END VEXCODE CONFIGURED DEVICES ----
-
 #include "auton.h"
+#include "main.h"
 
 using namespace vex;
 
@@ -30,7 +11,7 @@ const bool defaultWaitForCompletion = true;
 
 void drive(directionType dir, double distance, bool waitForCompletion, int waitTime)
 {
-	Drivetrain.driveFor(forward, distance * movementFactor, distanceUnits::in, waitForCompletion);
+	Drivetrain.driveFor(dir, distance * movementFactor, distanceUnits::in, waitForCompletion);
 	wait(waitTime, timeUnits::msec);
 }
 
@@ -38,16 +19,7 @@ void drive(directionType dir, double distance, int wait) { drive(dir, distance, 
 void drive(directionType dir, double distance, bool waitForCompletion) { drive(dir, distance, waitForCompletion, defaultWaitTime); }
 void drive(directionType dir, double distance) { drive(dir, distance, defaultWaitForCompletion, defaultWaitTime); }
 
-void turn(turnType dir, double angle, bool waitForCompletion, int waitTime)
-{
-	Drivetrain.turnFor(dir, angle, rotationUnits::deg, waitForCompletion);
-	wait(waitTime, timeUnits::msec);
-}
-
-void turn(turnType dir, double angle, int waitTime) { turn(dir, angle, defaultWaitForCompletion, waitTime); }
-void turn(turnType dir, double angle, bool waitForCompletion) { turn(dir, angle, waitForCompletion, defaultWaitTime); }
-void turn(turnType dir, double angle) { turn(dir, angle, defaultWaitForCompletion, defaultWaitTime); }
-
+const bool defaultWaitForCompletion = true;
 void OLDshootAuton(void)
 {
 	// Inital Colored Triball into Goal
@@ -60,7 +32,7 @@ void OLDshootAuton(void)
 	setPistons(false, 100);
 
 	// Backup and Turn Into the Front Left Triball
-	drive(reverse, 6);
+	drive(reverse, 6, 1000);
 	turn(right, 85);
 
 	// Drive to the Left Triball
@@ -84,47 +56,49 @@ void shootAuton(void)
 {
 	// Inital Colored Triball into Goal
 	setPistons(false);
-	turn(left, 10);
-	drive(forward, 32);
+	turn(right, 11);
+	drive(forward, 30);
 
 	// Quick Piston Flash to Secure the Ball In
-	setPistons(true);
+	setPistons(true, 200);
 	setPistons(false, 100);
 
 	// Backup and Turn Into the Middle
-	drive(reverse, 6);
-	turn(right, 75);
-	drive(forward, 24);
+	drive(reverse, 12);
+	turn(left, 70);
+	drive(forward, 22);
 
 	// Get Near But Not Over Middle Line
-	turn(left, 20);
-	drive(forward, 8);
+	turn(right, 60);
+	drive(forward, 23);
 
 	// Turn and Push Middle Triballs with Pistons
-	turn(right, 90);
+	turn(left, 95); // MAKE THIS 90 IF THE TILTING IS FIXED
 	setPistons(true, 100);
-	drive(forward, 32);
+	drive(forward, 40);
 	setPistons(false, 100);
 
 	// Backup and Turn Back for Corner
 	drive(reverse, 8);
-	turn(right, 160);
+	turn(right, 135); // USED TO BE 160
 	drive(forward, 36);
 
 	// Turn and Try and get the Corner Tribal
-	turn(left, 135);
+	turn(left, 45); // turn(right, 135);
+	drive(forward, 10);
+	turn(left, 90);
 	drive(forward, 24, 0);
 
 	// Go Back to Corner for Shooting
-	drive(reverse, 24);
+	drive(reverse, 48);
 }
 
 void pushAuton(void)
 {
 	// Inital Colored Triball into Goal
 	setPistons(false);
-	turn(right, 10);
-	drive(forward, 32);
+	turn(left, 11);
+	drive(forward, 30);
 
 	// Quick Piston Flash to Secure the Ball In
 	setPistons(true);
@@ -132,22 +106,31 @@ void pushAuton(void)
 
 	// Backup and Turn Into the Center
 	drive(reverse, 6);
-	turn(left, 90);
+	turn(right, 90 + 11);
 	drive(forward, 36);
 
 	// Reset and Get into the Middle
-	drive(reverse, 4);
-	turn(right, 90);
-	drive(forward, 30);
+	drive(reverse, 8);
+	turn(left, 90);
+	drive(forward, 24);
 
-	// Push the Middle Triballs in the Goal
+	// Move Inital Triball at the Bar
 	setPistons(true);
+	turn(left, 90, 300);
+
+	// Re-adjust robot to the center of field
+	setPistons(false, 100);
 	turn(right, 90);
-	drive(forward, 36);
+	drive(forward, 8);
+
+	// Push in Triballs into Goal
+	turn(left, 90);
+	setPistons(true, 100);
+	drive(forward, 42);
 
 	// Reset
 	setPistons(false);
-	drive(reverse, 30);
+	drive(reverse, 36);
 }
 
 void autonomous(void)
